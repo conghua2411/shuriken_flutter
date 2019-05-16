@@ -185,7 +185,7 @@ class Obstacle {
     }
   }
 
-  Bullet createBullet(Image image) {
+  Bullet createBullet(List<Image> image) {
     List<double> dir = List(2);
 
     dir[0] = bWidth / 2 - posObstacle.dx;

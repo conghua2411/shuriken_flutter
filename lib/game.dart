@@ -39,7 +39,7 @@ class Shuriken {
     paintEnemyBullets = Paint()..color = Color(0xFF00FF00);
 
     player = Player(
-        posPlayer: Position(dx: dimension.width / 2, dy: dimension.height - 50),
+        posPlayer: Position(dx: dimension.width / 2, dy: dimension.height - 70),
         radius: 50,
         paint: paintPlayer);
 
@@ -84,7 +84,12 @@ class Shuriken {
   Future loadImageShuriken() async {
     imageShuriken = List();
 
-    imageShuriken.add(await Flame.images.load('ninja/shuriken.png'));
+//    imageShuriken.add(await Flame.images.load('ninja/shuriken.png'));
+
+    for (int i = 0; i <= 3; i++) {
+      imageShuriken.add(
+          await Flame.images.load('shuriken/shuriken' + i.toString() + '.png'));
+    }
   }
 
   void draw(Canvas canvas) {
@@ -97,7 +102,7 @@ class Shuriken {
       } else if (obstacles[i].obstacleState == ObstacleState.alive) {
         // fire
         if (obstacles[i].isFire()) {
-          enemyBullets.add(obstacles[i].createBullet(imageShuriken[0]));
+          enemyBullets.add(obstacles[i].createBullet(imageShuriken));
         }
         obstacles[i].draw(canvas);
         obstacles[i].move();
@@ -108,7 +113,8 @@ class Shuriken {
     }
 
     for (int i = 0; i < bullets.length; i++) {
-      if (bullets[i].posObject.dy < -40 || bullets[i].bulletState == BulletState.readyToDelete) {
+      if (bullets[i].posObject.dy < -40 ||
+          bullets[i].bulletState == BulletState.readyToDelete) {
         bullets.removeAt(i);
         i--;
       } else {
@@ -118,7 +124,7 @@ class Shuriken {
         if (checkCollision(bullets[i]) ||
             checkCollisionShurikenEnemy(i, enemyBullets)) {
           // power bullet
-//          bullets.removeAt(i);
+          bullets.removeAt(i);
         }
       }
     }
@@ -199,8 +205,7 @@ class Shuriken {
   }
 
   void dragEnd() {
-
-    player.moveTo(Position(dx: dimension.width / 2, dy: dimension.height - 50));
+    player.moveTo(Position(dx: dimension.width / 2, dy: dimension.height - 70));
 
     if (direction.length < 2) {
       return;
@@ -212,13 +217,13 @@ class Shuriken {
     dir[1] = direction[1].dy - direction[0].dy;
 
     Bullet bullet = Bullet(
-        posObject: Position(dx: dimension.width / 2, dy: dimension.height - 50),
+        posObject: Position(dx: player.posPlayer.dx, dy: player.posPlayer.dy),
         speed: 0.1,
         radius: 15,
         direction: dir,
         bWidth: dimension.width,
         paint: paintBullet,
-        imageShuriken: imageShuriken[0],
+        imageShuriken: imageShuriken,
         bulletPlayer: BulletPlayer.player);
 
     bullets.add(bullet);

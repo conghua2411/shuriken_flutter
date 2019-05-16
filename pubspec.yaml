@@ -64,6 +64,10 @@ flutter:
   - assets/images/ninja/ninja9.png
   - assets/images/ninja/ninja_death.png
   - assets/images/ninja/shuriken.png
+  - assets/images/shuriken/shuriken0.png
+  - assets/images/shuriken/shuriken1.png
+  - assets/images/shuriken/shuriken2.png
+  - assets/images/shuriken/shuriken3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

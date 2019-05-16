@@ -21,7 +21,11 @@ class Bullet {
 
   BulletState bulletState;
 
-  Image imageShuriken;
+  List<Image> imageShuriken;
+
+  int countShurikenAnimation = 0;
+
+  Image curImage;
 
   BulletPlayer bulletPlayer;
 
@@ -48,6 +52,9 @@ class Bullet {
 //      if (bulletPlayer == BulletPlayer.player && radius < 30) {
 //        radius += 0.5;
 //      }
+
+      countShurikenAnimation = (countShurikenAnimation+1)%4;
+
       posObject.dx += realSpeed[0];
       posObject.dy += realSpeed[1];
 
@@ -77,13 +84,16 @@ class Bullet {
     if (imageShuriken == null) {
       canvas.drawCircle(Offset(posObject.dx, posObject.dy), radius, paint);
     } else {
-      Rect src = Rect.fromLTWH(0, 0, imageShuriken.width.toDouble(),
-          imageShuriken.height.toDouble());
-      Rect dst = Rect.fromLTWH(posObject.dx - 2 * radius,
-          posObject.dy - 2 * radius, radius * 4, radius * 4);
+
+      curImage = imageShuriken[countShurikenAnimation];
+
+      Rect src = Rect.fromLTWH(0, 0, curImage.width.toDouble(),
+          curImage.height.toDouble());
+      Rect dst = Rect.fromLTWH(posObject.dx - radius,
+          posObject.dy - radius, radius * 2, radius * 2);
 
       canvas.drawImageRect(
-          imageShuriken, src, dst, Paint()..color = Color(0xFFFFFFFF));
+          curImage, src, dst, Paint()..color = Color(0xFFFFFFFF));
     }
   }
 
