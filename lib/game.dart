@@ -192,8 +192,7 @@ class Shuriken {
 //        offset.dx <= player.posPlayer.dx + player.radius &&
 //        offset.dy >= player.posPlayer.dy - player.radius &&
 //        offset.dy <= player.posPlayer.dy + player.radius) {
-
-    player.moveTo(Position(dx: offset.dx, dy: offset.dy));
+//      player.moveTo(Position(dx: offset.dx, dy: offset.dy));
 
     if (direction.length < 2) {
       direction.add(Position(dx: offset.dx, dy: offset.dy));
@@ -201,7 +200,9 @@ class Shuriken {
       direction[1] = Position(dx: offset.dx, dy: offset.dy);
     }
 
-//    }
+    if (direction.length == 2) {
+      player.moveTo(player.calculatePosInBoundary(direction[0], direction[1]));
+    }
   }
 
   void dragEnd() {

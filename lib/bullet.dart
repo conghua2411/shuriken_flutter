@@ -42,6 +42,8 @@ class Bullet {
       @required this.bulletPlayer}) {
     bulletState = BulletState.flying;
 
+//    direction = checkDirection(direction);
+
     realSpeed = List(2);
     realSpeed[0] = direction[0] * speed;
     realSpeed[1] = direction[1] * speed;
@@ -107,5 +109,18 @@ class Bullet {
         eBullet.posObject.dy - eBullet.radius,
         eBullet.radius * 2,
         eBullet.radius * 2);
+  }
+
+  List<double> checkDirection(List<double> direction) {
+
+    if (direction[0] > direction[1]) {
+      direction[1] = direction[1]/direction[0];
+      direction[0] = 1;
+    } else {
+      direction[0] = direction[0]/direction[1];
+      direction[1] = 1;
+    }
+
+    return direction;
   }
 }

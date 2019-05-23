@@ -195,7 +195,7 @@ class Obstacle {
         posObject: Position(
             dx: posObstacle.dx + obsWidth / 2,
             dy: posObstacle.dy + obsHeight / 2 + obsHeight),
-        speed: 0.001,
+        speed: 0.007,
         radius: 15,
         direction: dir,
         bWidth: bWidth,
