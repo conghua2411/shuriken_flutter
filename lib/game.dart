@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flame/flame.dart';
 import 'package:shuriken/bullet.dart';
+import 'package:shuriken/gameUtil.dart';
+import 'package:shuriken/object/crate.dart';
 import 'package:shuriken/obstacle.dart';
 import 'package:shuriken/player.dart';
 import 'package:shuriken/position.dart';
@@ -31,6 +33,10 @@ class Shuriken {
 
   List<Image> imageShuriken;
 
+  List<Crate> listCrate;
+
+  Image imgCrate;
+
   Shuriken(this.dimension) {
     paintPlayer = Paint()..color = Color(0xFFFF0000);
     paintBullet = Paint()..color = Color(0xFF00FFFF);
@@ -49,6 +55,8 @@ class Shuriken {
 
     obstacles = List();
 
+    listCrate = List();
+
     random = Random();
 
     loadImageExplosion();
@@ -56,6 +64,12 @@ class Shuriken {
     loadImageNinja();
 
     loadImageShuriken();
+
+    loadImageCrate();
+  }
+
+  Future loadImageCrate() async {
+    imgCrate = await Flame.images.load('crate.png');
   }
 
   Future loadImageExplosion() async {
@@ -96,6 +110,7 @@ class Shuriken {
     canvas.drawRect(Rect.fromLTWH(0, 0, dimension.width, dimension.height),
         Paint()..color = Color(0xFFFFFFFF));
 
+    // enemy
     for (int i = 0; i < obstacles.length; i++) {
       if (obstacles[i].obstacleState == ObstacleState.gone) {
         obstacles.removeAt(i);
@@ -112,6 +127,7 @@ class Shuriken {
       }
     }
 
+    // bullet
     for (int i = 0; i < bullets.length; i++) {
       if (bullets[i].posObject.dy < -40 ||
           bullets[i].bulletState == BulletState.readyToDelete) {
@@ -121,7 +137,11 @@ class Shuriken {
         bullets[i].draw(canvas);
         bullets[i].move();
 
-        if (checkCollision(bullets[i]) ||
+        // check collision with crate
+        if (checkCollisiontCrateBullet(listCrate, bullets[i]) &&
+            bullets[i].bulletState == BulletState.flying) {
+          bullets[i].bulletState = BulletState.stop;
+        } else if (checkCollision(bullets[i]) ||
             checkCollisionShurikenEnemy(i, enemyBullets)) {
           // power bullet
           bullets.removeAt(i);
@@ -129,6 +149,12 @@ class Shuriken {
       }
     }
 
+    // crate
+    for (Crate crate in listCrate) {
+      crate.draw(canvas);
+    }
+
+    // enemy bullet
     for (int i = 0; i < enemyBullets.length; i++) {
       if (enemyBullets[i].posObject.dy < -40 ||
           enemyBullets[i].posObject.dy > dimension.height + 20) {
@@ -161,6 +187,50 @@ class Shuriken {
           imageExplosions,
           imageNinja));
     }
+
+    if (listCrate.length < 4) {
+      Crate crate = Crate.generateCrate(dimension.width, dimension.height, 40,
+          dimension.height - 400, 50, 50, imgCrate);
+
+      if (!checkCollisionCrates(listCrate, crate) && imgCrate != null) {
+        listCrate.add(crate);
+      }
+    }
+  }
+
+  //check with crates
+  bool checkCollisiontCrateBullet(List<Crate> list, Bullet bullet) {
+    for (Crate crate in list) {
+      if (GameUtil.check2RecOverlap(
+          crate.pos.x,
+          crate.pos.y,
+          crate.width,
+          crate.height,
+          bullet.posObject.dx - bullet.radius,
+          bullet.posObject.dy - bullet.radius,
+          bullet.radius * 2,
+          bullet.radius * 2)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool checkCollisionCrates(List<Crate> list, Crate target) {
+    for (Crate crate in list) {
+      if (GameUtil.check2RecOverlap(
+          crate.pos.x,
+          crate.pos.y,
+          crate.width,
+          crate.height,
+          target.pos.x,
+          target.pos.y,
+          target.width,
+          target.height)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   bool checkCollision(Bullet bullet) {

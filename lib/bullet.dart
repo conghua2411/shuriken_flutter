@@ -71,13 +71,13 @@ class Bullet {
   void checkBound() {
     //left
     if (posObject.dx - radius <= 0) {
-      bulletState = BulletState.stop;
+//      bulletState = BulletState.stop;
       realSpeed[0] = -realSpeed[0];
     }
 
     //right
     if (posObject.dx + radius >= bWidth) {
-      bulletState = BulletState.stop;
+//      bulletState = BulletState.stop;
       realSpeed[0] = -realSpeed[0];
     }
   }
