@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:shuriken/gameScreen.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Flame.util.fullScreen();
   await Flame.util.setOrientation(DeviceOrientation.portraitUp);
   Size dimension = await Flame.util.initialDimensions();
